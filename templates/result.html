@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equation Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5 text-center">
+        <h2 class="mb-4">Predicted Equation & Solution</h2>
+        
+        <div class="card shadow-lg p-4 mb-5 bg-white rounded">
+            <h5>Input Image:</h5>
+            <img src="{{ url_for('static', filename='uploads/canvas.jpg') }}" class="img-fluid border rounded" alt="User Input">
+        </div>
+
+        <div class="card shadow-lg p-4 mb-5 bg-white rounded">
+            <h5>Predicted Equation:</h5>
+            <p class="fs-4 text-primary">{{ equation }}</p>
+        </div>
+
+        <div class="card shadow-lg p-4 mb-5 bg-white rounded">
+            <h5>Solution:</h5>
+            <p class="fs-4 text-success">{{ solution }}</p>
+        </div>
+
+        <a href="/" class="btn btn-primary">Back to Drawing</a>
+    </div>
+</body>
+</html>
