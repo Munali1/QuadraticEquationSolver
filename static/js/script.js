@@ -2,6 +2,8 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 const clearButton = document.getElementById('clear');
 const solveButton = document.getElementById('solve');
+const uploadButton = document.getElementById('uploadButton');
+const uploadInput = document.getElementById('upload');
 const equationDisplay = document.getElementById('equation');
 const solutionDisplay = document.getElementById('solution');
 
@@ -16,7 +18,7 @@ ctx.strokeStyle = 'black';
 ctx.lineWidth = 4;
 ctx.lineCap = 'round';
 
-// Mouse Events
+// Mouse events
 canvas.addEventListener('mousedown', (e) => {
     isDrawing = true;
     [lastX, lastY] = [e.offsetX, e.offsetY];
@@ -25,7 +27,7 @@ canvas.addEventListener('mousemove', draw);
 canvas.addEventListener('mouseup', () => isDrawing = false);
 canvas.addEventListener('mouseout', () => isDrawing = false);
 
-// Touch Events for Mobile
+// Touch events for mobile devices
 canvas.addEventListener('touchstart', (e) => {
     isDrawing = true;
     const touch = e.touches[0];
@@ -40,7 +42,7 @@ canvas.addEventListener('touchmove', (e) => {
 });
 canvas.addEventListener('touchend', () => isDrawing = false);
 
-// Draw Function
+// Draw function
 function draw(e) {
     if (!isDrawing) return;
     ctx.beginPath();
@@ -50,7 +52,7 @@ function draw(e) {
     [lastX, lastY] = [e.offsetX, e.offsetY];
 }
 
-// Clear Canvas
+// Clear canvas
 clearButton.addEventListener('click', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = 'white';
@@ -59,8 +61,30 @@ clearButton.addEventListener('click', () => {
     solutionDisplay.textContent = '';
 });
 
-// Solve Equation
+// Solve equation
 solveButton.addEventListener('click', solveEquation);
+
+// Upload image
+uploadButton.addEventListener('click', () => {
+    uploadInput.click();
+});
+
+uploadInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                solveEquation();
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
 
 function solveEquation() {
     const image = canvas.toDataURL();
@@ -74,7 +98,7 @@ function solveEquation() {
     .then(response => response.json())
     .then(data => {
         if (data.error) {
-            equationDisplay.textContent = 'Error';
+            equationDisplay.textContent = 'Invalid Equation';
             solutionDisplay.textContent = data.error;
         } else {
             equationDisplay.textContent = data.equation;
